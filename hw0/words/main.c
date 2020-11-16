@@ -57,7 +57,27 @@ int num_words(FILE* infile) {
  * Useful functions: fgetc(), isalpha(), tolower(), add_word().
  */
 void count_words(WordCount **wclist, FILE *infile) {
+  //Read each character, if it's legal char from alphabet, add it to the buffer
+  // if not, reset the buffer, add the buffer to the words
+  char currWord[MAX_WORD_LEN];
+  int currentIndex = 0;
+  char currentChar = fgetc(infile);
+  while(currentChar != EOF){
+    putchar(currentChar);
+    if(isalpha(currentChar) && currentIndex < MAX_WORD_LEN){
+      currWord[currentIndex] = (char) currentChar;
+      currentIndex++;
+    }else{
+      currWord[currentIndex] = '\n';
+      add_word(wclist, currWord);
+      currWord[currentIndex] = 'n';
+      currentIndex=0;
+    }
+    currentChar = getc(infile);
+  }
+  printf("%i", len_words(word_counts->next));
 }
+
 
 /*
  * Comparator to sort list by frequency.
@@ -129,8 +149,15 @@ int main (int argc, char *argv[]) {
     infile = stdin;
   } else {
     // At least one file specified. Useful functions: fopen(), fclose().
-    // The first file can be found at argv[optind]. The last file can be
-    // found at argv[argc-1].
+    for(int i = optind; i <= argc-1; i++){
+      char* fileName = argv[i];
+      infile = fopen(fileName, "r");
+      if(!infile){
+        printf("Failed to open %s", fileName);
+        exit(1);
+      }
+      count_words(&word_counts, infile);
+    }
   }
 
   if (count_mode) {

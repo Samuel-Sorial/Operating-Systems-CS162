@@ -1,6 +1,5 @@
 #include <stdio.h>
-
-char* my_helper_function(char* string);
+#include "my_lib.h"
 
 int main(int argc, char** argv) {
   char* result = my_helper_function(argv[0]);
