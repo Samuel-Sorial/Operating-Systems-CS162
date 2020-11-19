@@ -42,6 +42,11 @@ void init_words(WordCount **wclist) {
 
 size_t len_words(WordCount *wchead) {
     size_t len = 0;
+    WordCount *current = wchead;
+    while(current != NULL){
+      len++;
+      current = (*current).next;
+    }
     return len;
 }
 
