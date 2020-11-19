@@ -30,7 +30,14 @@ char *new_string(char *str) {
 
 void init_words(WordCount **wclist) {
   /* Initialize word count.  */
-  *wclist = NULL;
+  *wclist = (WordCount*) malloc(sizeof(WordCount));
+  if(*wclist == NULL){
+    // Memory exhausted
+    exit(1);
+  }
+  (*wclist)->word = NULL;
+  (*wclist)->count = 0;
+  (*wclist)->next = NULL;
 }
 
 size_t len_words(WordCount *wchead) {

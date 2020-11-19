@@ -62,9 +62,11 @@ void count_words(WordCount **wclist, FILE *infile) {
   char currWord[MAX_WORD_LEN];
   int currentIndex = 0;
   char currentChar = fgetc(infile);
+  int total = 0;
   while(currentChar != EOF){
     putchar(currentChar);
     if(isalpha(currentChar) && currentIndex < MAX_WORD_LEN){
+      currentChar = tolower(currentChar);
       currWord[currentIndex] = (char) currentChar;
       currentIndex++;
     }else{
@@ -75,7 +77,7 @@ void count_words(WordCount **wclist, FILE *infile) {
     }
     currentChar = getc(infile);
   }
-  printf("%i", len_words(word_counts->next));
+  printf("%i", total);
 }
 
 
