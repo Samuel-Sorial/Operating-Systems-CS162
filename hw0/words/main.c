@@ -103,72 +103,75 @@ static int display_help(void) {
  */
 int main (int argc, char *argv[]) {
 
-  // Count Mode (default): outputs the total amount of words counted
-  bool count_mode = true;
-  int total_words = 0;
+  init_words(word_counts);
+  add_word(word_counts, "Hell");
+  printf("%s", find_word(word_counts, "Hell")->word);
+//   // Count Mode (default): outputs the total amount of words counted
+//   bool count_mode = true;
+//   int total_words = 0;
 
-  // Freq Mode: outputs the frequency of each word
-  bool freq_mode = false;
+//   // Freq Mode: outputs the frequency of each word
+//   bool freq_mode = false;
 
-  FILE *infile = NULL;
+//   FILE *infile = NULL;
 
-  // Variables for command line argument parsing
-  int i;
-  static struct option long_options[] =
-  {
-      {"count", no_argument, 0, 'c'},
-      {"frequency", no_argument, 0, 'f'},
-      {"help", no_argument, 0, 'h'},
-      {0, 0, 0, 0}
-  };
+//   // Variables for command line argument parsing
+//   int i;
+//   static struct option long_options[] =
+//   {
+//       {"count", no_argument, 0, 'c'},
+//       {"frequency", no_argument, 0, 'f'},
+//       {"help", no_argument, 0, 'h'},
+//       {0, 0, 0, 0}
+//   };
 
-  // Sets flags
-  while ((i = getopt_long(argc, argv, "cfh", long_options, NULL)) != -1) {
-      switch (i) {
-          case 'c':
-              count_mode = true;
-              freq_mode = false;
-              break;
-          case 'f':
-              count_mode = false;
-              freq_mode = true;
-              break;
-          case 'h':
-              return display_help();
-      }
-  }
+//   // Sets flags
+//   while ((i = getopt_long(argc, argv, "cfh", long_options, NULL)) != -1) {
+//       switch (i) {
+//           case 'c':
+//               count_mode = true;
+//               freq_mode = false;
+//               break;
+//           case 'f':
+//               count_mode = false;
+//               freq_mode = true;
+//               break;
+//           case 'h':
+//               return display_help();
+//       }
+//   }
 
-  if (!count_mode && !freq_mode) {
-    printf("Please specify a mode.\n");
-    return display_help();
-  }
+//   if (!count_mode && !freq_mode) {
+//     printf("Please specify a mode.\n");
+//     return display_help();
+//   }
 
-  /* Create the empty data structure */
-  init_words(&word_counts);
+//   /* Create the empty data structure */
+//   init_words(&word_counts);
 
-  if ((argc - optind) < 1) {
-    // No input file specified, instead, read from STDIN instead.
-    infile = stdin;
-  } else {
-    // At least one file specified. Useful functions: fopen(), fclose().
-    for(int i = optind; i <= argc-1; i++){
-      char* fileName = argv[i];
-      infile = fopen(fileName, "r");
-      if(!infile){
-        printf("Failed to open %s", fileName);
-        exit(1);
-      }
-      count_words(&word_counts, infile);
-    }
-  }
+//   if ((argc - optind) < 1) {
+//     // No input file specified, instead, read from STDIN instead.
+//     infile = stdin;
+//   } else {
+//     // At least one file specified. Useful functions: fopen(), fclose().
+//     for(int i = optind; i <= argc-1; i++){
+//       char* fileName = argv[i];
+//       infile = fopen(fileName, "r");
+//       if(!infile){
+//         printf("Failed to open %s", fileName);
+//         exit(1);
+//       }
+//       count_words(&word_counts, infile);
+//     }
+//   }
 
-  if (count_mode) {
-    printf("The total number of words is: %i\n", total_words);
-  } else {
-    wordcount_sort(&word_counts, wordcount_less);
+//   if (count_mode) {
+//     printf("The total number of words is: %i\n", total_words);
+//   } else {
+//     wordcount_sort(&word_counts, wordcount_less);
 
-    printf("The frequencies of each word are: \n");
-    fprint_words(word_counts, stdout);
-}
+//     printf("The frequencies of each word are: \n");
+//     fprint_words(word_counts, stdout);
+// }
   return 0;
 }

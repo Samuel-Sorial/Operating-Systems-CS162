@@ -1,7 +1,5 @@
 /*
-
 Copyright © 2019 University of California, Berkeley
-
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -13,9 +11,7 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 word_count provides lists of words and associated count
-
 Functional methods take the head of a list as first arg.
 Mutators take a reference to a list as first arg.
 */
@@ -30,60 +26,62 @@ char *new_string(char *str) {
 
 void init_words(WordCount **wclist) {
   /* Initialize word count.  */
-  *wclist = (WordCount*) malloc(sizeof(WordCount));
-  if(*wclist == NULL)
-  {
-    // Memory exhausted
-    exit(1);
-  }
-  (*wclist)->word = NULL;
-  (*wclist)->count = 0;
-  (*wclist)->next = NULL;
+  *wclist = NULL;
 }
 
 size_t len_words(WordCount *wchead) {
     size_t len = 0;
-    WordCount *current = wchead;
-    while(current != NULL)
-    {
+    WordCount *wc_ptr = wchead;
+    while(wc_ptr != NULL){
+      wc_ptr = wc_ptr->next;
       len++;
-      current = (*current).next;
     }
     return len;
 }
 
 WordCount *find_word(WordCount *wchead, char *word) {
   /* Return count for word, if it exists */
-  WordCount *wc = wchead;
-  while (wc != NULL)
-  { 
-   if(strcmp(word, wc->word) == 0){
-     return wc;
-   }
-   wc = wc->next;
+  WordCount *wc = NULL;
+  WordCount *wc_ptr = wchead;
+  while(wc_ptr != NULL){
+    if(strcmp(wc_ptr->word, word) == 0){
+      wc = wc_ptr;
+      break;
+    }
+    wc_ptr = wc_ptr->next;
   }
-  
-  return NULL;
+  return wc;
 }
 
-  /* If word is present in word_counts list, increment the count, otw insert with count 1. */
 void add_word(WordCount **wclist, char *word) {
-  WordCount *currWord = find_word(*wclist, word); // Check if it's already added, increase count
-  if(currWord != NULL){
-    currWord->count++; 
+  /* If word is present in word_counts list, increment the count, otw insert with count 1. */
+  if(*wclist == NULL){
+    *wclist = (WordCount*) malloc(sizeof(WordCount));
+    (*wclist)->word = word;
+    (*wclist)->count = 1;
+    (*wclist)->next = NULL;
     return;
   }
-  // Add new word
-  WordCount *newWord = (WordCount*) malloc(sizeof(WordCount));
-  newWord->count = 1;
-  newWord->word = word;
-  newWord->next = NULL;
-  WordCount *temp = *wclist;
-  while(temp->next != NULL)
-  {
-    temp = temp->next;
+  WordCount *target_ptr = find_word(*wclist, word);
+  if(target_ptr != NULL){
+    target_ptr->count++;
+  }else{
+    // Insert at the end 
+    WordCount *curr_ptr = (WordCount*) malloc(sizeof(WordCount));
+    curr_ptr->word = NULL;
+    curr_ptr->count = 0;
+    curr_ptr->next = NULL;
+    curr_ptr->next = *wclist;
+    WordCount *wc_ptr = curr_ptr;
+    while(wc_ptr->next != NULL){
+      wc_ptr = wc_ptr->next;
+    }
+    WordCount *target_ptr = (WordCount*) malloc(sizeof(WordCount));
+    target_ptr->word = word;
+    target_ptr->count = 1;
+    target_ptr->next = NULL;
+    wc_ptr->next = target_ptr;
   }
-  temp->next = newWord;
 }
 
 void fprint_words(WordCount *wchead, FILE *ofile) {
