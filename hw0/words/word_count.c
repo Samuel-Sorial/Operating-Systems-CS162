@@ -31,7 +31,8 @@ char *new_string(char *str) {
 void init_words(WordCount **wclist) {
   /* Initialize word count.  */
   *wclist = (WordCount*) malloc(sizeof(WordCount));
-  if(*wclist == NULL){
+  if(*wclist == NULL)
+  {
     // Memory exhausted
     exit(1);
   }
@@ -43,7 +44,8 @@ void init_words(WordCount **wclist) {
 size_t len_words(WordCount *wchead) {
     size_t len = 0;
     WordCount *current = wchead;
-    while(current != NULL){
+    while(current != NULL)
+    {
       len++;
       current = (*current).next;
     }
@@ -52,8 +54,16 @@ size_t len_words(WordCount *wchead) {
 
 WordCount *find_word(WordCount *wchead, char *word) {
   /* Return count for word, if it exists */
-  WordCount *wc = NULL;
-  return wc;
+  WordCount *wc = wchead;
+  while (wc != NULL)
+  { 
+   if(strcmp(word, wc->word) == 0){
+     return wc;
+   }
+   wc = wc->next;
+  }
+  
+  return NULL;
 }
 
 void add_word(WordCount **wclist, char *word) {
