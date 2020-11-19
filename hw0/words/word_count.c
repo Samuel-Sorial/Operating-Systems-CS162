@@ -66,8 +66,24 @@ WordCount *find_word(WordCount *wchead, char *word) {
   return NULL;
 }
 
-void add_word(WordCount **wclist, char *word) {
   /* If word is present in word_counts list, increment the count, otw insert with count 1. */
+void add_word(WordCount **wclist, char *word) {
+  WordCount *currWord = find_word(*wclist, word); // Check if it's already added, increase count
+  if(currWord != NULL){
+    currWord->count++; 
+    return;
+  }
+  // Add new word
+  WordCount *newWord = (WordCount*) malloc(sizeof(WordCount));
+  newWord->count = 1;
+  newWord->word = word;
+  newWord->next = NULL;
+  WordCount *temp = *wclist;
+  while(temp->next != NULL)
+  {
+    temp = temp->next;
+  }
+  temp->next = newWord;
 }
 
 void fprint_words(WordCount *wchead, FILE *ofile) {
