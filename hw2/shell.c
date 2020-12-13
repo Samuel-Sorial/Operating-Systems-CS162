@@ -115,6 +115,24 @@ void init_shell() {
   }
 }
 
+void execute(char* line){
+  struct tokens *tokens = tokenize(line);
+  unused char* path = tokens_get_token(tokens, 0);
+  int len = tokens_get_length(tokens);
+  unused char* args[len+1];
+  for(int i = 0; i < len; i++){
+    args[i] = tokens_get_token(tokens, i);
+  }
+  args[len] = NULL;
+  execv(path, args);
+}
+
+
+void executeProgram(char* line){
+  execute(line);
+}
+
+
 int main(unused int argc, unused char *argv[]) {
   init_shell();
 
@@ -136,7 +154,13 @@ int main(unused int argc, unused char *argv[]) {
       cmd_table[fundex].fun(tokens);
     } else {
       /* REPLACE this to run commands as programs. */
-      fprintf(stdout, "This shell doesn't know how to run programs.\n");
+      int waitStatus;
+      pid_t pid = fork();
+      if(pid > 0){
+        wait(&waitStatus);
+      }else{
+        executeProgram(line);
+      }
     }
 
     if (shell_is_interactive)
@@ -149,3 +173,6 @@ int main(unused int argc, unused char *argv[]) {
 
   return 0;
 }
+
+
+
